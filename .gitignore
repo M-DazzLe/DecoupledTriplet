@@ -3,8 +3,6 @@ outputs/
 patients/*
 !patients/.gitkeep
 
-# Checkpoints (released upon acceptance)
-checkpoints/
 
 # Python
 __pycache__/
@@ -15,3 +13,6 @@ __pycache__/
 *.log
 *.csv
 .DS_Store
+
+# Checkpoints (distributed via GitHub Releases)
+checkpoints/

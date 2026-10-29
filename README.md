@@ -31,7 +31,7 @@ Outputs are written to `outputs/`: per-candidate diagnosis reports (`Diagnosis_*
 
 ## Model Checkpoints
 
-The three stage checkpoints (`s1_ovvnet.pth`, `s2_lightlungnet.pth`, `s3_hcenet.pth`, ~136 MB total) **will be released together with the training code upon formal publication** of the manuscript.
+The three stage checkpoints (`s1_ovvnet.pth`, `s2_lightlungnet.pth`, `s3_hcenet.pth`, ~136 MB total) are available as assets of the GitHub Release "checkpoints-v1.0". Download the three files and place them in a `checkpoints/` folder before running.
 
 ## Training Code and Data
 
