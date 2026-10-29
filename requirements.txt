@@ -1,0 +1,6 @@
+torch>=2.1
+SimpleITK>=2.3
+opencv-python>=4.8
+scipy>=1.10
+matplotlib>=3.7
+tqdm>=4.65

@@ -1,0 +1,17 @@
+# Runtime outputs
+outputs/
+patients/*
+!patients/.gitkeep
+
+# Checkpoints (released upon acceptance)
+checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Logs and misc
+*.log
+*.csv
+.DS_Store
