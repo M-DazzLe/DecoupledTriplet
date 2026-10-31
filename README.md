@@ -45,6 +45,12 @@ The corresponding 3D outputs—the 64³ CT patch and the predicted binary mask i
 - [`example_CT.nii.gz`](docs/examples_3d/example_CT.nii.gz) — 64×64×64 CT patch
 - [`example_Mask.nii.gz`](docs/examples_3d/example_Mask.nii.gz) — predicted nodule mask
 
+Visualized in ITK-SNAP (CT patch with the predicted mask overlay):
+
+<p align="center">
+  <img src="docs/images/example_output_3d.png" width="95%">
+</p>
+
 ## Model Checkpoints
 
 The three stage checkpoints (`s1_ovvnet.pth`, `s2_lightlungnet.pth`, `s3_hcenet.pth`, ~136 MB total) are available as assets of the GitHub Release "checkpoints-v1.0". Download the three files and place them in a `checkpoints/` folder before running.
