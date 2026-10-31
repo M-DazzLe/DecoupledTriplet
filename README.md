@@ -29,6 +29,22 @@ pip install -r requirements.txt
 
 Outputs are written to `outputs/`: per-candidate diagnosis reports (`Diagnosis_*.txt`), visualization panels (`*_Nodule_*.png`), and 64³ CT-patch/mask pairs in NIfTI (`*_3D_Data/`), plus per-stage timing.
 
+## Example Outputs
+
+For each retained candidate, the pipeline produces a three-panel figure—S1/S2 detection (left), the S3 64³ 3D mask overlaid on the CT patch (middle), and the cascaded diagnostic metrics (right):
+
+<p align="center">
+  <img src="docs/images/example_output_1.png" width="95%">
+</p>
+<p align="center">
+  <img src="docs/images/example_output_2.png" width="95%">
+</p>
+
+The corresponding 3D outputs—the 64³ CT patch and the predicted binary mask in NIfTI format (open directly in [ITK-SNAP](http://www.itksnap.org) or [3D Slicer](https://www.slicer.org))—are provided under `docs/examples_3d/`:
+
+- [`example_CT.nii.gz`](docs/examples_3d/example_CT.nii.gz) — 64×64×64 CT patch
+- [`example_Mask.nii.gz`](docs/examples_3d/example_Mask.nii.gz) — predicted nodule mask
+
 ## Model Checkpoints
 
 The three stage checkpoints (`s1_ovvnet.pth`, `s2_lightlungnet.pth`, `s3_hcenet.pth`, ~136 MB total) are available as assets of the GitHub Release "checkpoints-v1.0". Download the three files and place them in a `checkpoints/` folder before running.
