@@ -162,10 +162,20 @@ def run_joint_diagnosis(patient_dir, s1_net, s2_net, s3_net):
                 inp = torch.from_numpy(norm_vol[z]).unsqueeze(0).unsqueeze(0).to(DEVICE)
                 p_mask = (torch.sigmoid(s2_net(inp)) > 0.5).squeeze().cpu().numpy().astype(np.uint8)
                 p_mask = ndi.binary_fill_holes(p_mask).astype(np.uint8)
-                conts, _ = cv2.findContours(p_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-                v_conts = sorted(conts, key=cv2.contourArea, reverse=True)[:2]
+                comp_lab, n_comp = ndi.label(p_mask)
+                border_ids = set(comp_lab[0, :]) | set(comp_lab[-1, :]) | set(comp_lab[:, 0]) | set(comp_lab[:, -1])
+                border_ids.discard(0)
                 hull_mask = np.zeros_like(p_mask)
-                for c in v_conts:
+                for comp_id in range(1, n_comp + 1):
+                    if comp_id in border_ids:
+                        continue
+                    comp = (comp_lab == comp_id).astype(np.uint8)
+                    conts, _ = cv2.findContours(comp, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                    if not conts:
+                        continue
+                    c = max(conts, key=cv2.contourArea)
+                    if cv2.contourArea(c) < 200:
+                        continue
                     cv2.drawContours(hull_mask, [cv2.convexHull(c)], 0, 1, thickness=cv2.FILLED)
                 z_to_mask[z] = hull_mask
     sync()
