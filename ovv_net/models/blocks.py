@@ -202,3 +202,63 @@ class ASPP(nn.Module):
         # 拼接所有感受野维度的特征并降维
         res = torch.cat(res, dim=1)
         return self.project(res)
+
+
+class DSASPP(nn.Module):
+    """ASPP with depthwise-separable dilated convolutions.
+
+    Same branch topology, dilation rates and tensor shapes as ASPP; each dilated
+    3x3 dense convolution is replaced by depthwise (dilated) + pointwise.
+    """
+
+    def __init__(self, in_channels, out_channels, atrous_rates=[2, 4, 8]):
+        super(DSASPP, self).__init__()
+        modules = []
+        modules.append(nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, 1, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True)))
+
+        for rate in atrous_rates:
+            modules.append(nn.Sequential(
+                nn.Conv2d(in_channels, in_channels, 3, padding=rate, dilation=rate,
+                          groups=in_channels, bias=False),
+                nn.BatchNorm2d(in_channels),
+                nn.ReLU(inplace=True),
+                nn.Conv2d(in_channels, out_channels, 1, bias=False),
+                nn.BatchNorm2d(out_channels),
+                nn.ReLU(inplace=True)))
+
+        self.global_pool = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),
+            nn.Conv2d(in_channels, out_channels, 1, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True))
+
+        self.convs = nn.ModuleList(modules)
+
+        self.project = nn.Sequential(
+            nn.Conv2d((len(atrous_rates) + 2) * out_channels, out_channels, 1, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5))
+
+    def forward(self, x):
+        res = [conv(x) for conv in self.convs]
+        pool_feat = self.global_pool(x)
+        pool_feat = F.interpolate(pool_feat, size=x.shape[2:], mode='bilinear', align_corners=False)
+        res.append(pool_feat)
+        return self.project(torch.cat(res, dim=1))
+class PlainBottleneck(nn.Module):
+    """No-ASPP bottleneck: a single 3x3 conv block (precision-first variant)."""
+
+    def __init__(self, in_channels, out_channels, atrous_rates=None):
+        super(PlainBottleneck, self).__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, 3, padding=1, bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True))
+
+    def forward(self, x):
+        return self.conv(x)
+

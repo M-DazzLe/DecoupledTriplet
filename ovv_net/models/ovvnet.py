@@ -1,7 +1,9 @@
+import os
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from ovv_net.models.blocks import DepthwiseSeparableConv, EncoderBlock, DecoderBlock, ASPP
+from ovv_net.models.blocks import DepthwiseSeparableConv, EncoderBlock, DecoderBlock, ASPP, DSASPP, PlainBottleneck
 
 
 class OVVNet(nn.Module):
@@ -35,7 +37,14 @@ class OVVNet(nn.Module):
             enc_channels.append(curr_channels)
 
         # === 2. Bottleneck (最底层) ===
-        self.bottleneck_conv = ASPP(curr_channels, curr_channels, atrous_rates=[2, 4, 8])
+        aspp_mode = config.get('aspp', os.environ.get('ASPP_MODE', 'dense'))
+        if aspp_mode == 'none':
+            aspp_cls = PlainBottleneck
+        elif aspp_mode == 'ds':
+            aspp_cls = DSASPP
+        else:
+            aspp_cls = ASPP
+        self.bottleneck_conv = aspp_cls(curr_channels, curr_channels, atrous_rates=[2, 4, 8])
 
         # === 3. Decoder ===
         self.decoder = nn.ModuleList()

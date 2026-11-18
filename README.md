@@ -4,7 +4,7 @@ Official inference code for **"Decoupled Triplet: A Lightweight Three-Stage Dete
 
 Decoupled Triplet decomposes the complete pulmonary nodule workflow into three independently optimized stages:
 
-- **S1 — OVV-Net** (10.43M): 2.5D recall-first candidate detection
+- **S1 — OVV-Net** (4.16M, DS-ASPP): 2.5D recall-first candidate detection
 - **S2 — LightLungNet** (0.23M): ERIS physical engine + lung-parenchyma filtering
 - **S3 — HCE-Net** (0.82M): cascaded false-positive exclusion → malignancy → invasion diagnosis with 3D mask output
 
@@ -53,7 +53,9 @@ Visualized in ITK-SNAP (CT patch with the predicted mask overlay):
 
 ## Model Checkpoints
 
-The three stage checkpoints (`s1_ovvnet.pth`, `s2_lightlungnet.pth`, `s3_hcenet.pth`, ~136 MB total) are available as assets of the GitHub Release "checkpoints-v1.0". Download the three files and place them in a `checkpoints/` folder before running.
+The three stage checkpoints (`s1_ds_aspp.pth`, `s2_lightlungnet.pth`, `s3_hce_net.pth`, ~58 MB total) are available as assets of the GitHub Release **"checkpoints-v2.0"**. Download the three files and place them in a `checkpoints/` folder before running.
+
+> **v2 update:** S1 now uses the depthwise-separable ASPP (DS-ASPP) bottleneck: 10.43M → 4.16M parameters, and full-candidate recall on LUNA16 subset9 improves from 93.8% to 97.7% (d/2 matching). The previous dense-ASPP checkpoints remain available in release "checkpoints-v1.0"; to use them, set `'aspp': 'dense'` in `ovv_net/config/config.py`.
 
 ## Training Code and Data
 

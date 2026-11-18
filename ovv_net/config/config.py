@@ -61,6 +61,7 @@ MODEL_CONFIG = {
     'base_channels': 32,   # 基础通道数
     'num_encoder_blocks': 4, # 🔥 增加深度：512尺寸建议下采样 4 次 (512->32)，捕捉更大感受野
     'num_decoder_blocks': 4,
+    'aspp': 'ds',          # DS-ASPP (4.16M, deployment); use 'dense' for the 10.43M benchmark variant
 }
 
 DEVICE = 'cuda'

@@ -29,9 +29,9 @@ from ovv_net.config.config import CONFIG
 from ovv_net.models.ovvnet import OVVNet
 from new_step3_model import HCE_ConvNeXt_3D
 
-CKPT_S1 = str(PKG_ROOT / 'checkpoints' / 's1_ovvnet.pth')
+CKPT_S1 = str(PKG_ROOT / 'checkpoints' / 's1_ds_aspp.pth')
 CKPT_S2 = str(PKG_ROOT / 'checkpoints' / 's2_lightlungnet.pth')
-CKPT_S3 = str(PKG_ROOT / 'checkpoints' / 's3_hcenet.pth')
+CKPT_S3 = str(PKG_ROOT / 'checkpoints' / 's3_hce_net.pth')
 
 PATIENTS_ROOT = PKG_ROOT / 'patients'
 OUTPUT_DIR = PKG_ROOT / 'outputs'
